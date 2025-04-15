@@ -1,0 +1,46 @@
+version: "3.1"
+
+stories:
+  - story: User greets
+    steps:
+      - intent: greet
+      - action: utter_greet
+
+  - story: User says goodbye
+    steps:
+      - intent: goodbye
+      - action: utter_goodbye
+
+  - story: User asks an FAQ
+    steps:
+      - intent: faq
+      - action: utter_faq
+
+  - story: User asks for a meal suggestion
+    steps:
+      - intent: meal_suggestion
+      - action: action_recommend_meal
+
+  - story: User gives positive feedback
+    steps:
+      - intent: give_feedback
+        entities:
+          - feedback_type: "positive"
+      - action: action_handle_feedback
+
+  - story: User gives negative feedback
+    steps:
+      - intent: give_feedback
+        entities:
+          - feedback_type: "negative"
+      - action: action_handle_feedback
+
+  - story: User provides diet preference
+    steps:
+      - intent: diet_preference
+      - action: action_store_user_preference
+
+  - story: Fallback response
+    steps:
+      - intent: fallback
+      - action: utter_default

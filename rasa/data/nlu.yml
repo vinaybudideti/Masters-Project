@@ -1,0 +1,113 @@
+nlu:
+  - intent: greet
+    examples: |
+      - Hi
+      - Hello
+      - Hey there
+      - Good morning
+      - Good evening
+      - What's up?
+      - Hi there!
+      - Hey!
+      - Yo!
+      - How's it going?
+
+  - intent: goodbye
+    examples: |
+      - Bye
+      - See you later
+      - Goodbye
+      - Take care
+      - Catch you later
+      - See you soon
+      - Bye for now
+      - Have a nice day
+      - Talk to you later
+      - I'm signing off
+
+  - intent: meal_suggestion
+    examples: |
+      - Suggest a meal
+      - What should I eat for dinner?
+      - Give me a high-protein meal
+      - Recommend a healthy meal
+      - Can you suggest something for lunch?
+      - I need a quick and healthy meal
+      - What are some good meal options?
+      - Suggest a balanced meal for me
+      - What should I eat after a workout?
+      - Recommend a meal rich in fiber
+      - Can you suggest a meal for weight loss?
+      - I need a meal that is high in iron
+      - What should I eat before going to the gym?
+      - I need something easy to cook for dinner
+      - Tell me a meal that is good for digestion
+      - What’s a good meal for breakfast?
+      - Give me a high-protein meal
+      - What is a good low-carb meal?
+      - Suggest a protein-rich diet
+      - What is the best meal for a vegan diet?
+      - I need a keto-friendly meal
+      - Recommend something dairy-free
+      - Suggest a meal that fits my diet plan
+
+  - intent: diet_preference
+    examples: |
+      - I am vegan
+      - I follow a vegan diet
+      - I prefer vegetarian meals
+      - I don't eat meat
+      - I am on a keto diet
+      - My diet is paleo
+      - I only eat gluten-free food
+      - I follow a dairy-free diet
+      - I need vegetarian meal suggestions
+      - I am on a low-carb diet
+      - I eat only whole foods
+      - I am on a weight-loss diet
+      - I follow intermittent fasting
+      - I need a meal suitable for diabetes
+      - Can you suggest meals with healthy fats?
+      - I need a meal with low cholesterol
+      - I eat only organic food, suggest something
+
+  - intent: faq
+    examples: |
+      - What is a balanced diet?
+      - How many calories should I eat daily?
+      - What is the best diet for weight loss?
+      - What are the benefits of eating fiber?
+      - How much water should I drink per day?
+      - What is the difference between carbs and fats?
+      - Which foods help with muscle gain?
+      - What is the best source of plant-based protein?
+      - What vitamins are essential for good health?
+      - Should I take protein supplements?
+      - How much protein do I need daily?
+      - What is the best time to eat fruits?
+      - Is coffee good for health?
+      - Can you suggest some foods rich in omega-3?
+      - What are some iron-rich foods?
+      - How can I reduce sugar intake in my diet?
+      - Is eating late at night bad for health?
+      - How many meals should I eat in a day?
+
+  - intent: give_feedback
+    examples: |
+      - I liked it [positive](feedback_type)
+      - I loved the meal [positive](feedback_type)
+      - It was good [positive](feedback_type)
+      - That was delicious [positive](feedback_type)
+      - That meal was perfect [positive](feedback_type)
+      - I enjoyed it a lot [positive](feedback_type)
+      - It was okay, but I’d like to try another one [positive](feedback_type)
+
+      - I didn't like it [negative](feedback_type)
+      - The meal was bad [negative](feedback_type)
+      - I want a different meal [negative](feedback_type)
+      - It wasn't good [negative](feedback_type)
+      - Not my favorite meal [negative](feedback_type)
+      - Can you suggest something else? [negative](feedback_type)
+      - I didn’t enjoy that [negative](feedback_type)
+      - The taste wasn’t great [negative](feedback_type)
+      - I prefer something else [negative](feedback_type)
