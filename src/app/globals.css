@@ -1,0 +1,268 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --bg-primary: #080810;
+    --bg-secondary: #0f0f1a;
+    --glass-bg: rgba(255, 255, 255, 0.05);
+    --glass-border: rgba(255, 255, 255, 0.1);
+    --glass-border-hover: rgba(255, 255, 255, 0.18);
+    --primary: #6366f1;
+    --primary-glow: #818cf8;
+    --primary-dark: #4f46e5;
+    --accent: #22d3ee;
+    --health: #10b981;
+    --health-dark: #059669;
+    --text-primary: #f8fafc;
+    --text-secondary: #94a3b8;
+    --text-muted: #64748b;
+    --scrollbar-bg: rgba(255, 255, 255, 0.05);
+    --scrollbar-thumb: rgba(255, 255, 255, 0.15);
+  }
+
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  html,
+  body {
+    height: 100%;
+    overflow: hidden;
+  }
+
+  body {
+    background-color: var(--bg-primary);
+    color: var(--text-primary);
+    font-family: var(--font-geist-sans), system-ui, -apple-system, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  /* Custom scrollbar */
+  ::-webkit-scrollbar {
+    width: 4px;
+    height: 4px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: var(--scrollbar-bg);
+    border-radius: 100px;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: var(--scrollbar-thumb);
+    border-radius: 100px;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 255, 255, 0.25);
+  }
+
+  /* Selection */
+  ::selection {
+    background: rgba(99, 102, 241, 0.3);
+    color: #f8fafc;
+  }
+}
+
+@layer components {
+  /* Glass morphism base */
+  .glass {
+    background: var(--glass-bg);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid var(--glass-border);
+  }
+
+  .glass-hover {
+    transition: border-color 0.2s ease, background 0.2s ease;
+  }
+
+  .glass-hover:hover {
+    border-color: var(--glass-border-hover);
+    background: rgba(255, 255, 255, 0.08);
+  }
+
+  /* Gradient text */
+  .gradient-text {
+    background: linear-gradient(135deg, #6366f1, #8b5cf6, #22d3ee);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  /* Primary button */
+  .btn-primary {
+    @apply bg-primary hover:bg-primary-dark text-white font-medium px-4 py-2 rounded-xl
+           transition-all duration-200 ease-out
+           shadow-glow hover:shadow-lg
+           disabled:opacity-50 disabled:cursor-not-allowed disabled:shadow-none;
+  }
+
+  /* Ghost button */
+  .btn-ghost {
+    @apply glass glass-hover text-text-secondary hover:text-text-primary
+           font-medium px-3 py-2 rounded-xl transition-all duration-200;
+  }
+
+  /* Diet pill */
+  .diet-pill {
+    @apply px-3 py-1.5 rounded-full text-xs font-medium
+           border transition-all duration-200 cursor-pointer select-none;
+  }
+
+  .diet-pill-active {
+    @apply bg-primary text-white border-primary shadow-glow-sm;
+  }
+
+  .diet-pill-inactive {
+    @apply glass text-text-secondary border-transparent
+           hover:border-glass-border hover:text-text-primary;
+  }
+
+  /* Message bubble base */
+  .message-user {
+    @apply bg-primary text-white rounded-2xl rounded-tr-sm px-4 py-3
+           shadow-glow-sm max-w-[80%] ml-auto;
+  }
+
+  .message-ai {
+    @apply glass text-text-primary rounded-2xl rounded-tl-sm px-4 py-3
+           border-l-2 border-primary max-w-[85%];
+  }
+
+  /* Nutrition card */
+  .nutrition-card {
+    @apply glass rounded-2xl p-4 border border-health/20
+           shadow-health-glow/10;
+  }
+
+  /* Input area */
+  .chat-input {
+    @apply glass rounded-2xl px-4 py-3 w-full
+           text-text-primary placeholder:text-text-muted
+           focus:outline-none focus:border-primary/50
+           resize-none transition-all duration-200;
+  }
+
+  /* Macro progress bar */
+  .macro-bar {
+    @apply h-1.5 rounded-full overflow-hidden bg-white/10;
+  }
+
+  /* Animated mesh background */
+  .bg-mesh {
+    background-color: var(--bg-primary);
+    background-image:
+      radial-gradient(at 40% 20%, hsla(240, 100%, 74%, 0.12) 0, transparent 50%),
+      radial-gradient(at 80% 0%, hsla(189, 100%, 56%, 0.08) 0, transparent 50%),
+      radial-gradient(at 0% 50%, hsla(280, 100%, 74%, 0.06) 0, transparent 50%),
+      radial-gradient(at 80% 50%, hsla(240, 100%, 56%, 0.05) 0, transparent 50%),
+      radial-gradient(at 0% 100%, hsla(189, 100%, 74%, 0.08) 0, transparent 50%);
+  }
+}
+
+@layer utilities {
+  /* Streaming text cursor */
+  .streaming-cursor::after {
+    content: "▋";
+    animation: blink 0.8s step-end infinite;
+    color: var(--primary-glow);
+    margin-left: 1px;
+  }
+
+  @keyframes blink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0; }
+  }
+
+  /* Prevent text selection on interactive elements */
+  .no-select {
+    -webkit-user-select: none;
+    user-select: none;
+  }
+
+  /* Smooth scroll */
+  .scroll-smooth {
+    scroll-behavior: smooth;
+  }
+}
+
+/* Markdown content styles */
+.prose-nutribot {
+  color: var(--text-primary);
+  line-height: 1.7;
+}
+
+.prose-nutribot p {
+  margin-bottom: 0.75rem;
+}
+
+.prose-nutribot p:last-child {
+  margin-bottom: 0;
+}
+
+.prose-nutribot strong {
+  color: #f8fafc;
+  font-weight: 600;
+}
+
+.prose-nutribot em {
+  color: var(--accent);
+  font-style: normal;
+  font-weight: 500;
+}
+
+.prose-nutribot ul,
+.prose-nutribot ol {
+  padding-left: 1.25rem;
+  margin-bottom: 0.75rem;
+}
+
+.prose-nutribot li {
+  margin-bottom: 0.25rem;
+  color: var(--text-secondary);
+}
+
+.prose-nutribot li::marker {
+  color: var(--primary-glow);
+}
+
+.prose-nutribot h1,
+.prose-nutribot h2,
+.prose-nutribot h3 {
+  color: #f8fafc;
+  font-weight: 600;
+  margin-top: 1rem;
+  margin-bottom: 0.5rem;
+}
+
+.prose-nutribot h3 {
+  font-size: 1rem;
+  color: var(--primary-glow);
+}
+
+.prose-nutribot code {
+  background: rgba(99, 102, 241, 0.15);
+  color: var(--primary-glow);
+  padding: 0.1rem 0.4rem;
+  border-radius: 0.3rem;
+  font-size: 0.85em;
+}
+
+.prose-nutribot hr {
+  border-color: rgba(255, 255, 255, 0.08);
+  margin: 0.75rem 0;
+}
+
+.prose-nutribot blockquote {
+  border-left: 3px solid var(--primary);
+  padding-left: 0.75rem;
+  color: var(--text-secondary);
+  font-style: italic;
+  margin: 0.5rem 0;
+}

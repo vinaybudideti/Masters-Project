@@ -1,141 +1,145 @@
-# 🥗 NutriBot — AI-Powered Personalized Nutrition Chatbot
+# NutriBot 🥗
 
-NutriBot is an **AI-driven conversational chatbot** designed to provide **personalized nutrition and meal recommendations** based on user preferences like diet type (e.g., keto, vegan), nutrient focus (e.g., high-protein), and meal type (breakfast, lunch, dinner). It integrates **Natural Language Processing (NLP)** using **Rasa**, a **Flask backend**, and a modern **React + Tailwind CSS frontend** to deliver real-time, interactive dietary guidance.
+**AI-powered personalized nutrition assistant** built with Next.js 15, Claude claude-sonnet-4-6, and the Vercel AI SDK.
 
-> “Eat smart, chat smarter — NutriBot’s got your plate covered!”
-
----
-
-## 🧠 Core Features
-
-- ✅ **Conversational AI**: Built with Rasa 3.6.21 for intent classification and dialogue flow
-- 🍱 **Personalized Meal Suggestions**: Responds to queries like _"Suggest a vegan dinner high in protein"_
-- 🔍 **Real-Time Nutrition Data**: Fetches calorie and macro info using the **Nutritionix API**
-- 💬 **Multi-turn Conversation**: Remembers context during interactions (slot filling)
-- 🖥️ **Modern UI**: Clean, responsive frontend using React.js and Tailwind CSS
-- 🐳 **Dockerized Setup**: Easy deployment via Docker Compose across environments
-- 🔄 **Custom Actions**: Built-in logic to call APIs and format dynamic responses
-- 🚫 **Graceful Fallbacks**: Handles incomplete or irrelevant queries naturally
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/vinaybudideti/Masters-Project)
 
 ---
 
-## 🛠️ Tech Stack
+## What it does
 
-| Layer         | Technology              |
-|---------------|--------------------------|
-| NLP & Dialogue | Rasa (NLU + Core)        |
-| Backend       | Flask (Python 3.10.16)    |
-| Frontend      | React.js + Tailwind CSS   |
-| NLP Libraries | spaCy, Rasa NLU pipeline  |
-| Data Source   | [Nutritionix API](https://developer.nutritionix.com/) |
-| Deployment    | Docker + Docker Compose   |
-| Hosting       | Compatible with Render, Heroku, etc. I host on gcp|
+NutriBot is an intelligent nutrition chatbot that provides:
+
+- **Personalized meal recommendations** based on your diet (vegan, keto, paleo, Mediterranean, etc.)
+- **Real nutrition data** — accurate calories and macros fetched from the Nutritionix API
+- **Agentic AI** — Claude claude-sonnet-4-6 autonomously calls nutrition tools to look up meal data before responding
+- **Streaming responses** — answers appear in real-time as Claude generates them
+- **Persistent preferences** — diet type, goals, and calorie targets saved to localStorage
 
 ---
 
-## 📁 Project Structure
+## Tech Stack
+
+| Layer | Technology |
+|-------|-----------|
+| Framework | Next.js 15 (App Router) |
+| Language | TypeScript |
+| UI | Tailwind CSS v3 + Framer Motion |
+| State | Zustand with localStorage persistence |
+| AI SDK | Vercel AI SDK v4 |
+| LLM | Anthropic Claude claude-sonnet-4-6 |
+| Nutrition Data | Nutritionix API |
+| Deployment | Vercel |
+
+---
+
+## Architecture
 
 ```
-nutribot/
-├── rasa/               # Rasa NLU, Core, Actions, Config
-     ── docker-compose.yml  # Multi-service deployment
-├── flask/            # Flask Middleware Server
-├── frontend/           # React + Tailwind UI
-└── README.md           # Project documentation
+src/
+├── app/
+│   ├── api/
+│   │   ├── chat/route.ts        # Claude streaming endpoint (agentic loop)
+│   │   └── nutrition/route.ts   # Nutritionix proxy (API key secured server-side)
+│   ├── chat/page.tsx            # Main chat UI
+│   ├── layout.tsx
+│   └── globals.css
+├── components/
+│   ├── ChatInterface.tsx        # Root layout: sidebar + chat
+│   ├── MessageBubble.tsx        # Streaming message with markdown
+│   ├── MessageInput.tsx         # Auto-resizing input with stop button
+│   ├── NutritionCard.tsx        # Macro visualization cards
+│   ├── QuickActions.tsx         # Conversation starters
+│   ├── Sidebar.tsx              # Diet prefs, goals, calorie target
+│   └── TypingIndicator.tsx
+├── hooks/useNutritionChat.ts    # Wraps Vercel AI SDK useChat
+├── lib/
+│   ├── nutritionix.ts           # Vercel AI SDK tool definition
+│   ├── system-prompt.ts         # Dynamic Claude system prompt
+│   ├── types.ts
+│   └── utils.ts
+└── store/chatStore.ts           # Zustand store (persisted)
 ```
 
----
-
-## 🚀 Quick Start Guide
-
-### 🧱 Prerequisites
-
-- Docker & Docker Compose installed
-- Node.js (for frontend dev) and Python 3.10+
+The API route at `/api/chat` uses `streamText` from the Vercel AI SDK with `maxSteps: 3`, enabling an **agentic loop** where Claude can:
+1. Decide to search for nutrition data
+2. Call the `searchNutrition` tool (backed by Nutritionix API)
+3. Receive the results and craft a response with accurate macros
+4. Stream the final answer to the user
 
 ---
 
-### 🐳 1. Docker-Based Deployment (Recommended)
+## Local Development
+
+### Prerequisites
+- Node.js 18+
+- An [Anthropic API key](https://console.anthropic.com/)
+- (Optional) [Nutritionix API credentials](https://developer.nutritionix.com/)
+
+### Setup
 
 ```bash
-# From rasa root directory
-docker-compose up --build
-```
-- **Rasa Server:** http://localhost:5005  
-- **Rasa actions:** http://localhost:5055  
+# 1. Clone the repo
+git clone https://github.com/vinaybudideti/Masters-Project.git
+cd Masters-Project
 
----
-
-### 🔧 2. Manual Setup (For Development)
-
-#### ➤ Frontend (React)
-```bash
-cd frontend
+# 2. Install dependencies
 npm install
+
+# 3. Configure environment
+cp .env.example .env.local
+# Edit .env.local and add your ANTHROPIC_API_KEY
+
+# 4. Start dev server
 npm run dev
 ```
 
-#### ➤ Backend (Flask)
-```bash
-cd backend
-pip install -r requirements.txt
-python app.py
-```
+Open [http://localhost:3000](http://localhost:3000).
 
-#### ➤ Rasa Chatbot
-```bash
-cd rasa
-rasa train
-rasa run actions &
-rasa run --enable-api
-```
+> **Note:** Without `NUTRITIONIX_APP_ID` and `NUTRITIONIX_API_KEY`, the app uses estimated mock nutrition data. The chat still works fully — Claude just uses its built-in knowledge for nutrition estimates.
 
 ---
 
-## 💬 Example User Queries
+## Deploy to Vercel
 
-| User Message                          | Bot Response                              |
-|---------------------------------------|-------------------------------------------|
-| "Suggest a low-carb lunch"            | Meal options: Grilled chicken, salad...   |
-| "I want a vegan dinner high in protein" | Suggestions: Tofu quinoa, chickpea salad... |
+### One-click deploy:
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/vinaybudideti/Masters-Project)
 
----
+### Manual deploy:
+1. Push to GitHub
+2. Go to [vercel.com](https://vercel.com) → Import Project → select your repo
+3. Add environment variables:
+   - `ANTHROPIC_API_KEY` (required)
+   - `NUTRITIONIX_APP_ID` (optional)
+   - `NUTRITIONIX_API_KEY` (optional)
+4. Click **Deploy**
 
-## 🎯 Future Enhancements
-
-- 🧍 Personalized user profiles (health goals, allergies)
-- 🌐 Multilingual support using Hugging Face models
-- 📱 Voice interaction with Web Speech API
-- 🏃 Fitness tracker integrations (Fitbit, Google Fit)
-- ⏰ Meal reminders and daily plans (PWA support)
-- 📊 Admin dashboard for monitoring usage & logs
+Your app will be live in ~60 seconds at a `*.vercel.app` URL.
 
 ---
 
-## ❌ Known Limitations
+## Features
 
-- Relies on external APIs (rate-limiting may occur)
-- No persistent memory or long-term user profiles (yet)
-- English-only interface
-- No mobile app integration (planned in roadmap)
-
----
-
-## 📜 References
-
-- [Rasa Open Source](https://rasa.com/)
-- [Nutritionix API](https://developer.nutritionix.com/)
-- [React Documentation](https://reactjs.org/)
-- [Tailwind CSS](https://tailwindcss.com/)
-- [Flask Framework](https://flask.palletsprojects.com/)
-- [Docker Docs](https://docs.docker.com/)
+- **Streaming AI responses** — text streams in real-time via SSE
+- **Agentic nutrition lookup** — Claude calls the Nutritionix API autonomously when it needs accurate data
+- **Inline nutrition cards** — animated macro cards appear in chat alongside AI responses
+- **Persistent preferences** — diet type, health goals, calorie targets, and restrictions saved across sessions
+- **Dark glassmorphic UI** — modern 2026-style design with smooth Framer Motion animations
+- **Mobile responsive** — collapsible sidebar for mobile
+- **Zero-config fallback** — works without Nutritionix keys (uses estimated data)
 
 ---
 
-## 📄 License
+## Legacy Code
 
-This project is licensed under the **MIT License**.  
+The original Rasa NLU + Flask implementation is preserved in the `legacy/` directory for reference:
+- `legacy/rasa/` — Rasa 3.6 NLU chatbot (training data, models, actions)
+- `legacy/flask/` — Flask REST API middleware
+
+The new architecture replaces both with Next.js API Route Handlers and Claude claude-sonnet-4-6.
 
 ---
 
-🚀 **Visit the Deployment section of the repo to access the live Rasa NutriBot-Your AI Nutrition Assistant!** 🚀
+## License
+
+MIT © 2025 vinaybudideti
