@@ -86,7 +86,7 @@ export function ChatInterface() {
               </span>
             </div>
             <p className="text-[10px] text-text-muted leading-none mt-0.5">
-              AI nutritionist powered by Claude claude-sonnet-4-6
+              AI nutritionist
             </p>
           </div>
 

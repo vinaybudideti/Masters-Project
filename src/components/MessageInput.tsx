@@ -101,7 +101,7 @@ export function MessageInput({
         <div className="px-3 pb-2 flex items-center gap-2">
           <Sparkles className="w-3 h-3 text-primary/60" />
           <span className="text-[10px] text-text-muted">
-            Powered by Claude claude-sonnet-4-6 · Press{" "}
+            Press{" "}
             <kbd className="px-1 py-0.5 rounded bg-white/5 text-[9px] font-mono border border-white/10">
               Enter
             </kbd>{" "}

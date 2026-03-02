@@ -15,12 +15,12 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "NutriBot — AI Nutrition Assistant",
   description:
-    "Personalized nutrition advice and meal planning powered by Claude claude-sonnet-4-6. Get instant, evidence-based meal recommendations tailored to your diet and goals.",
+    "Personalized nutrition advice and meal planning powered by AI. Get instant, evidence-based meal recommendations tailored to your diet and goals.",
   keywords: ["nutrition", "meal planning", "AI", "diet", "health", "keto", "vegan"],
   authors: [{ name: "NutriBot" }],
   openGraph: {
     title: "NutriBot — AI Nutrition Assistant",
-    description: "Personalized nutrition advice powered by Claude claude-sonnet-4-6",
+    description: "Personalized nutrition advice powered by AI",
     type: "website",
   },
 };

@@ -1,7 +1,8 @@
 "use client";
 
-import { useChat } from "ai/react";
-import { useMemo } from "react";
+import { useChat } from "@ai-sdk/react";
+import { DefaultChatTransport } from "ai";
+import { useState, useMemo, useCallback } from "react";
 import { useChatStore } from "@/store/chatStore";
 import type { NutritionData } from "@/lib/types";
 
@@ -15,55 +16,48 @@ export interface ParsedMessage {
 
 export function useNutritionChat() {
   const preferences = useChatStore((s) => s.preferences);
+  const [input, setInput] = useState("");
 
   const {
     messages,
-    input,
-    setInput,
-    handleSubmit,
-    isLoading,
+    sendMessage: chatSendMessage,
+    status,
     error,
-    append,
-    reload,
     stop,
   } = useChat({
-    api: "/api/chat",
-    body: { preferences },
+    transport: new DefaultChatTransport({
+      api: "/api/chat",
+      body: { preferences },
+    }),
     onError: (err) => {
       console.error("Chat error:", err);
     },
   });
 
-  // Parse tool results embedded in messages to extract nutrition data
+  const isLoading = status === "submitted" || status === "streaming";
+
+  // Parse messages to extract text content and nutrition data from parts
   const parsedMessages: ParsedMessage[] = useMemo(() => {
     return messages
       .filter((m) => m.role === "user" || m.role === "assistant")
       .map((m) => {
         let nutritionData: NutritionData | undefined;
-
-        // Extract nutrition data from tool invocations in the message
-        if (m.role === "assistant" && m.toolInvocations) {
-          for (const tool of m.toolInvocations) {
-            if (
-              tool.toolName === "searchNutrition" &&
-              tool.state === "result" &&
-              tool.result
-            ) {
-              nutritionData = tool.result as NutritionData;
-              break;
-            }
-          }
-        }
-
-        // Get text content from message parts or content string
         let content = "";
-        if (typeof m.content === "string") {
-          content = m.content;
-        } else if (Array.isArray(m.content)) {
-          content = (m.content as Array<{ type: string; text?: string }>)
-            .filter((p) => p.type === "text")
-            .map((p) => p.text ?? "")
-            .join("");
+
+        for (const part of m.parts) {
+          if (part.type === "text") {
+            content += part.text;
+          }
+          // In AI SDK v6, tool parts have type "tool-<name>" with state "output-available"
+          if (
+            "toolName" in part &&
+            part.toolName === "searchNutrition" &&
+            "state" in part &&
+            part.state === "output-available" &&
+            "output" in part
+          ) {
+            nutritionData = part.output as NutritionData;
+          }
         }
 
         return {
@@ -76,16 +70,19 @@ export function useNutritionChat() {
       .filter((m) => m.content.length > 0 || m.nutritionData);
   }, [messages]);
 
-  const sendMessage = (text?: string) => {
-    const messageText = text || input;
-    if (!messageText.trim()) return;
+  const sendMessage = useCallback(
+    (text?: string) => {
+      const messageText = text || input;
+      if (!messageText.trim()) return;
+      chatSendMessage({ text: messageText });
+      setInput("");
+    },
+    [input, chatSendMessage]
+  );
 
-    if (text) {
-      append({ role: "user", content: text });
-    } else {
-      handleSubmit();
-    }
-  };
+  const handleSubmit = useCallback(() => {
+    sendMessage();
+  }, [sendMessage]);
 
   return {
     messages: parsedMessages,
@@ -95,8 +92,6 @@ export function useNutritionChat() {
     handleSubmit,
     isLoading,
     error,
-    append,
-    reload,
     stop,
     isEmpty: messages.length === 0,
   };

@@ -138,7 +138,7 @@
   /* Nutrition card */
   .nutrition-card {
     @apply glass rounded-2xl p-4 border border-health/20
-           shadow-health-glow/10;
+           shadow-health-glow;
   }
 
   /* Input area */

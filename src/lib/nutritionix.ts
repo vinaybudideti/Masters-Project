@@ -94,7 +94,7 @@ function getMockNutritionData(query: string): NutritionData {
 export const searchNutritionTool = tool({
   description:
     "Search for accurate nutritional information for a specific food, meal, or ingredient. Use this whenever you recommend a meal or food to provide precise calorie and macro data.",
-  parameters: z.object({
+  inputSchema: z.object({
     query: z
       .string()
       .describe(
