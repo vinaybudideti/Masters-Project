@@ -1,4 +1,4 @@
-import { streamText, convertToModelMessages, type UIMessage } from "ai";
+import { streamText, convertToModelMessages, stepCountIs, type UIMessage } from "ai";
 import { anthropic } from "@ai-sdk/anthropic";
 import { searchNutritionTool } from "@/lib/nutritionix";
 import { buildSystemPrompt } from "@/lib/system-prompt";
@@ -38,7 +38,7 @@ export async function POST(req: Request) {
       tools: {
         searchNutrition: searchNutritionTool,
       },
-      maxSteps: 3,
+      stopWhen: stepCountIs(3),
       maxTokens: 1024,
       temperature: 0.7,
     });
