@@ -39,7 +39,7 @@ export async function POST(req: Request) {
         searchNutrition: searchNutritionTool,
       },
       stopWhen: stepCountIs(3),
-      maxTokens: 1024,
+      maxOutputTokens: 1024,
       temperature: 0.7,
     });
 
