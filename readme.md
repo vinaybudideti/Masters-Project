@@ -1,8 +1,32 @@
 # NutriBot 🥗
 
-**AI-powered personalized nutrition assistant** built with Next.js 15, Claude claude-sonnet-4-6, and the Vercel AI SDK.
+**AI-powered personalized nutrition assistant** built with Next.js 15 and the Vercel AI SDK.
 
 [![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/vinaybudideti/Masters-Project)
+
+---
+
+## Screenshots
+
+### Welcome Screen
+Personalized sidebar with diet type, goals, calorie targets, and quick action prompts.
+
+![Welcome Screen](src/screenshots/image1.png)
+
+### Interactive Chat
+Conversational meal planning with follow-up questions to tailor recommendations.
+
+![Interactive Chat](src/screenshots/chatbot1.png)
+
+### AI Meal Plans with Nutrition Data
+Detailed 7-day meal plans with per-meal calorie and macro breakdowns.
+
+![Meal Plan Generation](src/screenshots/chatbot2.png)
+
+### Grocery Lists & Batch Cooking
+Complete weekly plans with batch cooking strategy and grocery lists.
+
+![Grocery List](src/screenshots/chatbot3.png)
 
 ---
 
@@ -12,8 +36,8 @@ NutriBot is an intelligent nutrition chatbot that provides:
 
 - **Personalized meal recommendations** based on your diet (vegan, keto, paleo, Mediterranean, etc.)
 - **Real nutrition data** — accurate calories and macros fetched from the Nutritionix API
-- **Agentic AI** — Claude claude-sonnet-4-6 autonomously calls nutrition tools to look up meal data before responding
-- **Streaming responses** — answers appear in real-time as Claude generates them
+- **Agentic AI** — the LLM autonomously calls nutrition tools to look up meal data before responding
+- **Streaming responses** — answers appear in real-time as they are generated
 - **Persistent preferences** — diet type, goals, and calorie targets saved to localStorage
 
 ---
@@ -26,8 +50,7 @@ NutriBot is an intelligent nutrition chatbot that provides:
 | Language | TypeScript |
 | UI | Tailwind CSS v3 + Framer Motion |
 | State | Zustand with localStorage persistence |
-| AI SDK | Vercel AI SDK v4 |
-| LLM | Anthropic Claude claude-sonnet-4-6 |
+| AI SDK | Vercel AI SDK v6 |
 | Nutrition Data | Nutritionix API |
 | Deployment | Vercel |
 
@@ -39,7 +62,7 @@ NutriBot is an intelligent nutrition chatbot that provides:
 src/
 ├── app/
 │   ├── api/
-│   │   ├── chat/route.ts        # Claude streaming endpoint (agentic loop)
+│   │   ├── chat/route.ts        # Streaming endpoint (agentic loop)
 │   │   └── nutrition/route.ts   # Nutritionix proxy (API key secured server-side)
 │   ├── chat/page.tsx            # Main chat UI
 │   ├── layout.tsx
@@ -55,13 +78,13 @@ src/
 ├── hooks/useNutritionChat.ts    # Wraps Vercel AI SDK useChat
 ├── lib/
 │   ├── nutritionix.ts           # Vercel AI SDK tool definition
-│   ├── system-prompt.ts         # Dynamic Claude system prompt
+│   ├── system-prompt.ts         # Dynamic system prompt
 │   ├── types.ts
 │   └── utils.ts
 └── store/chatStore.ts           # Zustand store (persisted)
 ```
 
-The API route at `/api/chat` uses `streamText` from the Vercel AI SDK with `maxSteps: 3`, enabling an **agentic loop** where Claude can:
+The API route at `/api/chat` uses `streamText` from the Vercel AI SDK with `maxSteps: 3`, enabling an **agentic loop** where the AI can:
 1. Decide to search for nutrition data
 2. Call the `searchNutrition` tool (backed by Nutritionix API)
 3. Receive the results and craft a response with accurate macros
@@ -96,7 +119,7 @@ npm run dev
 
 Open [http://localhost:3000](http://localhost:3000).
 
-> **Note:** Without `NUTRITIONIX_APP_ID` and `NUTRITIONIX_API_KEY`, the app uses estimated mock nutrition data. The chat still works fully — Claude just uses its built-in knowledge for nutrition estimates.
+> **Note:** Without `NUTRITIONIX_APP_ID` and `NUTRITIONIX_API_KEY`, the app uses estimated mock nutrition data. The chat still works fully — the AI uses its built-in knowledge for nutrition estimates.
 
 ---
 
@@ -121,10 +144,10 @@ Your app will be live in ~60 seconds at a `*.vercel.app` URL.
 ## Features
 
 - **Streaming AI responses** — text streams in real-time via SSE
-- **Agentic nutrition lookup** — Claude calls the Nutritionix API autonomously when it needs accurate data
+- **Agentic nutrition lookup** — the AI calls the Nutritionix API autonomously when it needs accurate data
 - **Inline nutrition cards** — animated macro cards appear in chat alongside AI responses
 - **Persistent preferences** — diet type, health goals, calorie targets, and restrictions saved across sessions
-- **Dark glassmorphic UI** — modern 2026-style design with smooth Framer Motion animations
+- **Dark glassmorphic UI** — modern design with smooth Framer Motion animations
 - **Mobile responsive** — collapsible sidebar for mobile
 - **Zero-config fallback** — works without Nutritionix keys (uses estimated data)
 
@@ -136,7 +159,7 @@ The original Rasa NLU + Flask implementation is preserved in the `legacy/` direc
 - `legacy/rasa/` — Rasa 3.6 NLU chatbot (training data, models, actions)
 - `legacy/flask/` — Flask REST API middleware
 
-The new architecture replaces both with Next.js API Route Handlers and Claude claude-sonnet-4-6.
+The new architecture replaces both with Next.js API Route Handlers and the Vercel AI SDK.
 
 ---
 
